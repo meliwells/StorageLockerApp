@@ -20,18 +20,18 @@ public class StorageLockerApp {
             if (menuChoice == 2) {
                 accessLocker();
             }
+            if (menuChoice == 3) {
+                releaseLocker();
+            }
+             if (menuChoice !=1 && menuChoice !=2 && menuChoice !=3) {
+                 exitProgram();
+             }
         }
     }
 /*
-   4. User releases a locker
-    -Access the locker (Step 3)
-    -Confirm user is sure to release locker
-    -If sure, release locker. If not sure, display locker has not been released and go back to main menu.
-
    5. User exits
     -Exit application
 */
-
 
     //Methods -
     public static void displayMainMenu() {
@@ -52,10 +52,14 @@ public class StorageLockerApp {
         return console.nextLine();
     }
 
+    public static void exitProgram() {
+        Scanner console = new Scanner(System.in);
+    }
+
     //rentLocker()
     public static void rentLocker() {
         int firstAvailableLocker = getAvailableLocker();
-        System.out.println(" Locker: " + lockerId[firstAvailableLocker] + "\nPIN Number: " + lockerPin[firstAvailableLocker]
+        System.out.println("Locker: " + lockerId[firstAvailableLocker] + "\nPIN Number: " + lockerPin[firstAvailableLocker]
                 + "\nThank you for renting!");
         lockerAvailable[firstAvailableLocker] = false;
     }
@@ -88,8 +92,32 @@ public class StorageLockerApp {
     }
 
         //releaseLocker()
+        public static void releaseLocker() {
+            System.out.println("Enter locker number");
+            String lockerNumber = getUserInput();
+            int locker = isLockerNumberValid(lockerNumber);
+            if (locker != -1 && !lockerAvailable[locker]) {
+                if (checkPin(locker)) {
+                    System.out.println("Are you sure you want to release your locker? y/n");
+                    String confirmation = getUserInput();
+                    if (confirmation("y")) {
+                        lockerAvailable[locker] = "y";
+                        System.out.println("Locker released");
+                    } else {
+                        System.out.println("Release canceled");
+                    }
+                } else {
+                    System.out.println("Incorrect PIN");
+                }
+            } else {
+                System.out.println("Locker not found");
+            }
+        }
 
-        //getAvailableLocker()
+        private static String confirmation () {;
+        }
+
+    //getAvailableLocker()
         public static int getAvailableLocker () {
             int firstAvailableLocker = -1;
             for (int i = 0; i < lockerAvailable.length; i++) {
@@ -113,7 +141,6 @@ public class StorageLockerApp {
     }
     //generatePin()
     //getLockerNumber()
-    //openLocker()
 }
 
 
