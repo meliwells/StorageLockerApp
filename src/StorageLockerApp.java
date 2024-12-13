@@ -1,4 +1,4 @@
-//import java utilities - scanner, random (for locker PINS)
+//import java utilities - random (for locker PINS)
 
 import java.util.Scanner;
 
@@ -11,38 +11,18 @@ public class StorageLockerApp {
     java.util.Scanner console = new java.util.Scanner(System.in);
 
     public static void main(String[] args) {
-      while(true) {
-          displayMainMenu();
-          getAvailableLocker();
-          int menuChoice = getChoice();
-          if (menuChoice == 1) {
-              rentLocker();
-          }
-      }
+        while (true) {
+            displayMainMenu();
+            int menuChoice = getChoice();
+            if (menuChoice == 1) {
+                rentLocker();
+            }
+            if (menuChoice == 2) {
+                accessLocker();
+            }
+        }
+    }
 /*
--create variable
--call method
-
-1. Display the main menu.
-    a. Rent
-    b. Access
-    c. Release
-    d. Any other key to exit
-
-   2. User rents a locker
-    -Check for 1st available locker
-
-    -Provide PIN number (make random once code works)
-    -Print a thank you with the locker number and PIN
-    -Display the main menu
-
-   3. User accesses a locker
-    -Enter the locker number
-    -If the locker is rented, ask for pin. If the locker is not rented, ask for locker number again.
-    -Enter the locker PIN
-    -If the PIN is correct, open locker and print success message. If PIN is not correct, ask for PIN again
-    -Display the main menu
-
    4. User releases a locker
     -Access the locker (Step 3)
     -Confirm user is sure to release locker
@@ -52,56 +32,88 @@ public class StorageLockerApp {
     -Exit application
 */
 
-    }
 
     //Methods -
-    public static void displayMainMenu(){
+    public static void displayMainMenu() {
         System.out.println("What would you like to do next?\n");
         if (getAvailableLocker() != -1) {
             System.out.println("1. Rent A Locker");
         }
-
         System.out.println("2. Access a Locker\n3. Release a Locker\n ---\nAny other Key to Exit");
-
     }
-        /*
-        - "What would you like to do next?"
-        - If locker available print: 1. Rent a locker
-        - 2. Access locker
-        - 3. Release locker
-        ---
-        Any other key to exit
-        */
-    //getChoice() (for main menu)
+
     public static int getChoice() {
         Scanner console = new Scanner(System.in);
         return Integer.parseInt(console.nextLine());
     }
 
+    public static String getUserInput() {
+        Scanner console = new Scanner(System.in);
+        return console.nextLine();
+    }
+
     //rentLocker()
     public static void rentLocker() {
         int firstAvailableLocker = getAvailableLocker();
-        System.out.println(" Locker: " + lockerId[firstAvailableLocker] + "\nPIN Number: "  + lockerPin[firstAvailableLocker]
+        System.out.println(" Locker: " + lockerId[firstAvailableLocker] + "\nPIN Number: " + lockerPin[firstAvailableLocker]
                 + "\nThank you for renting!");
         lockerAvailable[firstAvailableLocker] = false;
     }
+
     //accessLocker()
-    //releaseLocker()
-    //getAvailableLocker()
-    public static int getAvailableLocker() {
-        int firstAvailableLocker = -1;
-        for (int i = 0; i < lockerAvailable.length; i++) {
-            if (lockerAvailable [i]) {
-                return i;
+    public static void accessLocker() {
+        System.out.println("Enter locker number");
+        String lockerNumber = getUserInput();
+        int locker = isLockerNumberValid(lockerNumber);
+        if (locker != -1) {
+            if (checkPin(locker)) {
+                System.out.println("Your locker is open");
+            } else {
+                System.out.println("Incorrect PIN");
+            }
+
+        } else {
+            System.out.println("Locker not found");
+        }
+    }
+
+    public static boolean checkPin(int locker) {
+        boolean validPin = false;
+        System.out.println("Enter PIN ");
+        String userInput = getUserInput();
+        if(userInput.equals(lockerPin[locker])) {
+            validPin = true;
+        }
+        return validPin;
+    }
+
+        //releaseLocker()
+
+        //getAvailableLocker()
+        public static int getAvailableLocker () {
+            int firstAvailableLocker = -1;
+            for (int i = 0; i < lockerAvailable.length; i++) {
+                if (lockerAvailable[i]) {
+                    return i;
                 }
             }
 
-        return firstAvailableLocker;
+            return firstAvailableLocker;
+        }
+
+    //isLockerNumberValid()
+    public static int isLockerNumberValid(String checkId) {
+        int foundLocker = -1;
+        for (int i = 0; i < lockerId.length; i++) {
+            if (checkId.equals(lockerId[i])) {
+                return i;
+            }
+        }
+        return foundLocker;
     }
     //generatePin()
-    //printReceipt()
-    //isLockerNumberValid()
     //getLockerNumber()
     //openLocker()
-    //releaseLocker()
 }
+
+
